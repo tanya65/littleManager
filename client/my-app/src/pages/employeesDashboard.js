@@ -8,6 +8,9 @@ import Coin from '../resources/dollar.png';
 import Team from '../resources/group.png';
 import Crown from '../resources/crown.png';
 import Tooltip from '@material-ui/core/Tooltip';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+
 import '../styles/employee-dashboard.scss';
 
 class EmployeesDashboard extends React.Component{
@@ -31,11 +34,14 @@ class EmployeesDashboard extends React.Component{
             <Fragment>
                 <div style={{ padding:"5px 25px", textAlign:"left", borderBottom:"1.5px solid #A0A0A0"}}>
                     <span style={{textAlign:"left", fontSize:"30px"}}>Employees</span>
+                    <Fab size="small" color="primary" aria-label="Add" onClick={e=>this.navigate()} style={{float:"right"}}>
+                        <AddIcon />
+                    </Fab>
                 </div>
                 <div style={{marginTop:"4vh"}}>
                     {this.state.employees && this.state.employees.map((employee=>{
                         return (
-                        <div className="row" onClick={e=>this.navigate(employee._id)} key={employee._id}>
+                        <div className="row" style={{backgroundColor:(employee._id==this.props.user?.id) ? "#d4e1f4":"aliceblue", cursor:(employee._id==this.props.user?.id) ? 'default':'pointer' }} onClick={e=>this.navigate(employee._id)} key={employee._id}>
                             
                             <div className="cell name">
                                 <div>{employee.firstName + " " + employee.lastName}</div>
@@ -75,13 +81,13 @@ class EmployeesDashboard extends React.Component{
                         )
                     }))}
                 </div>
-
-                <Button onClick={e=>this.navigate()}>Add New</Button>
             </Fragment>            
         )
     }
 
     navigate(userId){
+
+        if(userId==this.props.user?.id) return;
 
         let pathname;
 

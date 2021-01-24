@@ -40,7 +40,7 @@ class Navbar extends React.Component{
         return (
             <div style={{width:"100%",height:"50px"}}>
                <div style={navItem} id={this.state.currentPath=="/profile"?'selected':''} onClick={e=>this.handleClick("profile")}>
-                    <span className="item">Profile: {this.props.user?.name}</span>
+                    <span className="item">My Profile</span>
                </div>
                <div style={navItem} id={this.state.currentPath=="/dashboard/leaves"?'selected':''} onClick={e=>this.handleClick("leaves")}>
                     <span className="item">Leaves</span>
