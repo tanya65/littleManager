@@ -128,7 +128,7 @@ class UserDetails extends React.Component {
                     <CircularProgress color="inherit" />
                 </Backdrop>
 
-                <div style={{ padding:"5px 25px", textAlign:"left", borderBottom:"1.5px solid #A0A0A0"}}>
+                <div style={{  marginBottom:"4vh", padding:"5px 25px", textAlign:"left", borderBottom:"1.5px solid #A0A0A0"}}>
                     <span style={{textAlign:"left", fontSize:"30px"}}>{this.state.profileView? "My Profile":" User Details"}</span>
                 </div>
 

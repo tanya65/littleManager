@@ -29,7 +29,7 @@ class Navbar extends React.Component{
                 height:"100%",
                 float:"right",
                 margin:"0 5px",
-                margin: "0px 5px",
+                margin: "0px",
                 cursor: "pointer"
             }
 

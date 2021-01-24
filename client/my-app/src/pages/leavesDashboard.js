@@ -8,6 +8,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import PersonIcon from '@material-ui/icons/Person';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import NotesIcon from '@material-ui/icons/Notes';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import Slide from '@material-ui/core/Slide';
 
 var moment = require('moment');
 
@@ -32,11 +35,22 @@ class LeavesDashboard extends React.Component{
     render(){
         return (
             <Fragment>
-                <div style={{ padding:"5px 25px", textAlign:"left", borderBottom:"1.5px solid #A0A0A0"}}>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    open={this.state.openMessage ? true : false}
+                    autoHideDuration={2000}
+                    TransitionComponent={Slide}
+                    onClose={() => this.closePopup()}>
+                    <MuiAlert elevation={4} variant="filled" onClose={() => this.closePopup()} severity={this.state.messageVariant}>
+                        {this.state.message}
+                    </MuiAlert>
+                </Snackbar>
+
+                <div style={{  marginBottom:"4vh", padding:"5px 25px", textAlign:"left", borderBottom:"1.5px solid #A0A0A0"}}>
                   <span style={{textAlign:"left", fontSize:"30px"}}>Leaves Tracker</span>
                 </div>
 
-                <div style={{marginTop:"4vh"}}>
+                <div>
                 {this.state.leaves.map((leave, index)=>
                     <div key={index} className="row">
                         <div className="leave-cell detail">
@@ -81,6 +95,11 @@ class LeavesDashboard extends React.Component{
         )
     }
 
+     //snackbar
+     closePopup = () => {
+        this.setState({ message: "", openMessage: false });
+    }
+
     handleTooltipClose(e){
         let classname = e.target.className.trim();
         if(classname!="leave-cell reason" && classname!="sub-cell") {
@@ -104,8 +123,10 @@ class LeavesDashboard extends React.Component{
             let leaves = [].concat(this.state.leaves);
             leaves.splice(index,1, leave);
     
-            console.log("leaves",leaves);
-            this.setState({leaves});
+            this.setState({leaves, openMessage: true, messageVariant: "success", message:"Updated leave status"});
+        })
+        .catch(e=>{
+            this.setState({openMessage: true, messageVariant: "error", message:"Oops! Couldn't update leave status"})
         })
 
     }

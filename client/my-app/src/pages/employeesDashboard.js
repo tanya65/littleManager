@@ -32,13 +32,13 @@ class EmployeesDashboard extends React.Component{
 
           return (
             <Fragment>
-                <div style={{ padding:"5px 25px", textAlign:"left", borderBottom:"1.5px solid #A0A0A0"}}>
+                <div style={{ marginBottom:"4vh", padding:"5px 25px", textAlign:"left", borderBottom:"1.5px solid #A0A0A0"}}>
                     <span style={{textAlign:"left", fontSize:"30px"}}>Employees</span>
                     <Fab size="small" color="primary" aria-label="Add" onClick={e=>this.navigate()} style={{float:"right"}}>
                         <AddIcon />
                     </Fab>
                 </div>
-                <div style={{marginTop:"4vh"}}>
+                <div>
                     {this.state.employees && this.state.employees.map((employee=>{
                         return (
                         <div className="row" style={{backgroundColor:(employee._id==this.props.user?.id) ? "#d4e1f4":"aliceblue", cursor:(employee._id==this.props.user?.id) ? 'default':'pointer' }} onClick={e=>this.navigate(employee._id)} key={employee._id}>
