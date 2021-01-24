@@ -3,6 +3,7 @@ import React,{Fragment} from 'react';
 import SignIn from '../components/signIn';
 import { Redirect } from "react-router-dom";
 import { connect } from 'react-redux';
+import AuthAPI from '../api-client/auth';
 
 class Login extends React.Component{
 
@@ -13,7 +14,33 @@ class Login extends React.Component{
         }
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot){}
+    componentDidMount(){
+        let username = sessionStorage.getItem('username');
+        let tokenId = sessionStorage.getItem('token');
+        let user = {username,tokenId}
+
+        if(!this.props.user.id && username && username!="undefined" && tokenId) {
+            this.authenticate(user);                     
+        }
+    }
+
+    authenticate(user){
+
+        AuthAPI.authenticate(user)
+        .then(user=>{
+        if(user){
+            let loggedInUser = {};
+            loggedInUser.name = user.firstName + (user.secondName || '');
+            loggedInUser.id = user._id;
+            loggedInUser.userRole = {role:user.userRole.name};
+            loggedInUser.userName = user.userName;
+            this.props.updateUser(loggedInUser);
+        }
+        })
+        .catch(err=>{
+            console.log("authentication failed!", err);
+        })
+    }
 
     render(){
         if (this.props.user?.name) {

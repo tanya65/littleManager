@@ -14,7 +14,8 @@ class UserDAO {
 
     static async findUserByUsername(username){
 
-        let user = await User.find({username}).populate('userRole', 'name -_id').select('firstName lastName name userRole -_id');
+        let user = await User.findOne({'userName': username}, 'firstName lastName name userRole userName').populate('userRole', 'name -_id')
+    
         return user;
     }
 

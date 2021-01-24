@@ -4,51 +4,55 @@ import AuthAPI from '../api-client/auth';
 import { connect } from 'react-redux';
 import { Button } from '@material-ui/core';
 
+const clientId = "639816459938-190vsnfaqbroegirj6jtiadctki8t9pl.apps.googleusercontent.com";
 
 function SignIn(props){
 
-  function onSuccess(res){
-      console.log("profile user:", res);
-      let username = res.profileObj?.email;
-      let tokenId = res.tokenId;
-      sessionStorage.setItem('token',tokenId);
-      if(!username) console.log("err! username is null");
-      let user = {username,tokenId}
-      
-      AuthAPI.authenticate(user)
-      .then(user=>{
-          console.log("success!", user);
-          sessionStorage.setItem('user',user[0]);
-          if(user) props.updateUser(user[0]);
-      })
-      .catch(err=>{
-          console.log("authentication failed!", err);
-      })
+    return(
+        <div>
+            <GoogleLogin
+            clientId={clientId}
+            buttonText="Login here"
+            onSuccess={onSuccess}
+            onFailure={onFailure}
+            >
+            </GoogleLogin>
+            <Button onClick={handleClick}>click me</Button>
+        </div>
+    )
+
+    function handleClick(){
+        sessionStorage.setItem('token',"xyz-bogusToken");
+        props.updateUser({name:"bogus", id: "5ffa8bf5c22bf4999335b3f6", userRole:{role:"admin"}});
     }
 
-  function onFailure(res){
-      console.log("on failure", res);
-  }
-  console.log("redux user:", props.user);
+    function onSuccess(res){
+        let username = res.profileObj?.email;
+        let tokenId = res.tokenId;
+        sessionStorage.setItem('token',tokenId);
+        if(!username) console.log("err! username is null");
+        let user = {username,tokenId}
+        
+        AuthAPI.authenticate(user)
+        .then(user=>{
+        if(user){
+            let loggedInUser = {};
+            loggedInUser.name = user.firstName + (user.secondName || '');
+            loggedInUser.id = user._id;
+            loggedInUser.userRole = {role:user.userRole.name};
+            loggedInUser.userName = user.userName;
+            sessionStorage.setItem('username',loggedInUser.userName);
+            props.updateUser(loggedInUser);
+            }
+        })
+        .catch(err=>{
+            console.log("authentication failed!", err);
+        })
+    }
 
-  return(
-      <div>
-          <GoogleLogin
-          clientId={clientId}
-          buttonText="Login here"
-          onSuccess={onSuccess}
-          onFailure={onFailure}
-          >
-          </GoogleLogin>
-          <Button onClick={handleClick}>click me</Button>
-      </div>
-  )
-
-  function handleClick(){
-      console.log("clicked");
-      sessionStorage.setItem('token',"xyz-bogusToken");
-      props.updateUser({name:"bogus", id: "5ffa8bf5c22bf4999335b3f6", userRole:{role:"admin"}});
-  }
+    function onFailure(res){
+        console.log("on failure", res);
+    }
 
 }
 

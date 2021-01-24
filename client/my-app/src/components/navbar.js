@@ -39,6 +39,9 @@ class Navbar extends React.Component{
 
         return (
             <div style={{width:"100%",height:"50px"}}>
+                <div style={navItem} id={this.state.currentPath=="/logout"?'selected':''} onClick={e=>this.handleClick("logout")}>
+                    <span className="item">Logout</span>
+               </div>
                <div style={navItem} id={this.state.currentPath=="/profile"?'selected':''} onClick={e=>this.handleClick("profile")}>
                     <span className="item">My Profile</span>
                </div>
@@ -64,6 +67,8 @@ class Navbar extends React.Component{
             case "leaves": pathname = "/dashboard/leaves"; break;
             case "employees": pathname = "/dashboard/employees"; break;
             case "payroll": pathname = '/tracker/payroll';break;
+            case "logout": pathname = '/logout';break;
+
         }
 
         if(pathname){

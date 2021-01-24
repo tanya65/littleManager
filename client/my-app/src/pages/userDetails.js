@@ -138,9 +138,11 @@ class UserDetails extends React.Component {
                     </div>
                     <MaterialUIForm onSubmit={this.mySubmitHandler}>
                         <div className="form-body">
-                            <TextField required className="field" label="firstname" value={this.state.firstName || ""} onChange={e => this.setState({ firstName: e.target.value })} />
-                            <TextField required className="field" label="lastname" value={this.state.lastName || ""} onChange={e => this.setState({ lastName: e.target.value })} />
-                            <NumberFormat required prefix={'$'} placeholder="eg 1,000" label="salary" value={parseFloat(this.state.salary) || ""} onValueChange={e => this.setState({ salary: e.value })} allowNegative={false}
+                            <TextField required className="field" label="Firstname" value={this.state.firstName || ""} onChange={e => this.setState({ firstName: e.target.value })} />
+                            <TextField required className="field" label="Lastname" value={this.state.lastName || ""} onChange={e => this.setState({ lastName: e.target.value })} />
+                            <TextField required className="field" label="Username" value={this.state.userName || ""} onChange={e => this.setState({ userName: e.target.value })} />
+
+                            <NumberFormat required prefix={'$'} placeholder="eg 1,000" label="Salary" value={parseFloat(this.state.salary) || ""} onValueChange={e => this.setState({ salary: e.value })} allowNegative={false}
                                thousandSeparator={true} customInput={TextField} className="field" key={0} disabled={this.state.profileView || this.props.user?.userRole?.role != "admin" ? true : false} />
                             <FormControl className="field">
                                 <FormControlLabel className="checkboxRole"
@@ -267,6 +269,7 @@ class UserDetails extends React.Component {
         user._id = this.state.userId;
         user.firstName = this.state.firstName;
         user.lastName = this.state.lastName;
+        user.userName = this.state.userName;
         user.salary = this.state.salary;
         user.userRole = this.getRoleId();
         user.designation = this.state.designation;

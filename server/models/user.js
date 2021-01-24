@@ -6,6 +6,7 @@ const designation = require('./designation');
 const userSchema = mongoose.Schema({
     firstName:String,
     lastName:String,
+    userName:String,
     team: {type:mongoose.Schema.Types.ObjectId, ref: team},
     salary: Number,
     userRole: {type:mongoose.Schema.Types.ObjectId, ref: userRole},

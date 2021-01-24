@@ -38,6 +38,7 @@ class AppRouter extends Component {
               <Route path='/dashboard/employees' render={() => {return this.props?.user?.userRole?.role=="admin"? (<EmployeesDashboard/>):(<PageNotFound/>)} } />
               <Route path='/profile' render={() => {return (<UserDetails/>) }} />
               <Route path='/tracker/payroll' render={() => {return (<PayrollTracker/>) }} />
+              <Route path='/logout' render={() => {this.logout();return (<Login/>) }} />
               </Fragment>
               :
               <Login/>
@@ -50,10 +51,22 @@ class AppRouter extends Component {
         );
     }
 
+    logout(){
+      sessionStorage.clear();
+      this.props.updateUser({});
+    }
+
 }
 
 const mapStateToProps = data => {
   return { user: data.user};
 }  
 
-export default connect(mapStateToProps, null)(AppRouter);
+const mapDispatchToProps = dispatch => {
+  if(!dispatch) return;
+  return {
+      updateUser: (data) => dispatch({ type: "UPDATE_USER", user: data })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppRouter);
