@@ -19,7 +19,7 @@ class App extends React.Component{
      
       <Router>
       {this.props.user?.userRole?.role && <Navbar/>}
-        <div style={{padding:"10vh 0"}}>
+        <div style={{padding:"5vh 0"}}>
           <AppRouter/>
         </div>
       </Router> 
@@ -34,5 +34,3 @@ const mapStateToProps = data => {
 }  
 
 export default connect(mapStateToProps, null)(App);
-
-xxx

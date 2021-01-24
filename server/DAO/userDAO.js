@@ -6,7 +6,7 @@ class UserDAO {
     
      static async addUser(userDetails){
 
-        let user = await User.updateOne({_id:ObjectId(userDetails._id)}, userDetails,  {upsert: true});
+        let user = await User.findByIdAndUpdate(ObjectId(userDetails._id), {$set: userDetails},  {new:true, upsert: true});
 
         if(!user) throw "err! couldn't add user";
         return user;

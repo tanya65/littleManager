@@ -12,6 +12,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {connect} from 'react-redux';
 import NumberFormat from 'react-number-format';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import Slide from '@material-ui/core/Slide';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { Redirect } from "react-router-dom";
 
 import UserAPI from '../api-client/user';
 import UserRoleAPI from '../api-client/userRole';
@@ -35,6 +41,12 @@ class UserDetails extends React.Component{
     extractUserId(currentPath){
         let userId = currentPath.split('/')[2];
         return userId;
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        if(this.state.pathname && prevState.pathname!=this.state.pathname){
+            this.setState({pathname:null})
+        }
     }
 
     componentDidMount(){
@@ -89,8 +101,28 @@ class UserDetails extends React.Component{
      } 
 
     render() {
+
+        if (this.state.pathname) {
+            return <Redirect push to={{ pathname: this.state.pathname }} />
+        }
+
         return (
-            <div>
+            <div>  
+                <Snackbar
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    open={this.state.openMessage}
+                    autoHideDuration={2000}
+                    TransitionComponent={Slide}
+                    onClose={() => this.closePopup()}>
+                    <MuiAlert elevation={4} variant="filled" onClose={() => this.closePopup()} severity={this.state.messageVariant}>
+                        {this.state.message}
+                    </MuiAlert>
+                </Snackbar>
+
+                <Backdrop style={{zIndex:"100"}} open={this.state.loading}>
+                    <CircularProgress color="inherit" />
+                </Backdrop>
+
                 <div style={{width:"90%",backgroundColor:"yellow",display:"inline-block"}}>
                 <MaterialUIForm onSubmit={this.mySubmitHandler}>
                     <div className="form-body"> 
@@ -179,12 +211,21 @@ class UserDetails extends React.Component{
                     </DialogActions>
                 </Dialog>
 
-
             </div>
         )
     }
 
+    start(){
+        this.setState({loading:true});
+    }
+
+    stop(){
+        this.setState({loading:false});
+    }
+
     async addNew(){
+        this.setState({loading:true});
+        this.closeDialog();
 
         let newItem = {name:this.state.newItemName};
         switch(this.state.addNewType){
@@ -192,19 +233,20 @@ class UserDetails extends React.Component{
                 await TeamAPI.add(newItem).then(newTeam=>{
                     let teams = this.state.teams;
                     teams.push(newTeam);
-                    this.setState({teams,team:newTeam});
+                    this.setState({teams,team:newTeam._id, loading:false,
+                        openMessage:true,messageVariant:"success",message:newTeam.name + ` added to list of teams`});
                 })
                 break;
             case "designation":
                 await DesignationAPI.add(newItem).then(newDesignation=>{
                     let designations = this.state.designations;
                     designations.push(newDesignation);
-                    this.setState({designations, designation:newDesignation});
-                })
+                    this.setState({designations, designation:newDesignation._id, loading:false,
+                        openMessage:true,messageVariant:"success",message: newDesignation.name + ` added to list of designations`});
+                });
                 break;
         }
 
-        this.closeDialog();
     }
 
     closeDialog(){
@@ -216,6 +258,7 @@ class UserDetails extends React.Component{
     }
 
     mySubmitHandler(){
+        this.setState({loading:true});
         let user = {};
         user._id = this.state.userId;
         user.firstName = this.state.firstName; 
@@ -227,8 +270,14 @@ class UserDetails extends React.Component{
 
         UserAPI.addUser(user)
         .then(result=>{
-            console.log("result",result);
+            this.setState({loading:false,openMessage:true,messageVariant:"success",message:"Added "+result.firstName, pathname:"/dashboard/employees"})
         })
+    }
+
+
+    //snackbar
+    closePopup = () => {
+        this.setState({ message: "", openMessage: false });
     }
 
 }

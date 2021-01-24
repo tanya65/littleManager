@@ -115,8 +115,8 @@ app.post("/user/add",async (req, res)=>{
 
   try{
     let userDetails = req.body;
-    await userDAO.addUser(userDetails);
-    return res.sendStatus(200);
+    let user = await userDAO.addUser(userDetails);
+    return res.send(user);
   }
   catch(err){
     return res.status(500).send(err);
